@@ -131,8 +131,13 @@ const findAll = async(req, res) => {
 }
 
 const findAllNewsFeed = async(req, res) => {
-    
-    Tweet.findAll({ order: [['updatedAt', 'DESC']] }).then((resp) => {
+    let limit = 10
+    let offset =  (req.params.pagenumber - 1) * limit
+    Tweet.findAll({
+        order: [['updatedAt', 'DESC']],
+        offset,
+        limit,
+    }).then((resp) => {
         
         if(resp.length == 0){
             return res.status(200).send({
@@ -195,6 +200,35 @@ const findFollowing = async(req, res) => {
     
 }
 
+const findFollower = async(req, res) => {
+    let userId = req.id;
+
+    Follower.findAll({
+            where: { 
+                followerId: userId,
+            }
+    }).then((user) => {
+        
+        if(user.length == 0){
+            return res.status(200).send({
+                message:'NO USER Following.....!'
+            });
+        }
+
+        res.status(200).send({
+            follower: user
+        });
+        
+
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message
+        })
+    })
+
+    
+}
+
 
 module.exports = { 
     create,
@@ -202,5 +236,6 @@ module.exports = {
     follow,
     unfollow,
     findAllNewsFeed,
-    findFollowing
+    findFollowing,
+    findFollower
 };

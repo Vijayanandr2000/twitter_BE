@@ -6,11 +6,11 @@ const app = express();
 
 app.use(express.json());
 
-db.sequelize.sync({force: true}).then(()=>{
-    console.log(`DB Table's are updated`);
-}).catch(err=>{
-    console.log(err.message)
-})
+// db.sequelize.sync({force: true}).then(()=>{
+//     console.log(`DB Table's are updated`);
+// }).catch(err=>{
+//     console.log(err.message)
+// })
 
 
 require('./routes/auth')(app)
